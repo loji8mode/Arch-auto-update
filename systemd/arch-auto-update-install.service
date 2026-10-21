@@ -1,0 +1,11 @@
+[Unit]
+Description=Arch Auto Update - install downloaded updates
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/opt/arch-auto-update/scripts/install_updates.py
+Nice=10
+IOSchedulingClass=best-effort
+IOSchedulingPriority=7

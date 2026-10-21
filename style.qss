@@ -1,0 +1,243 @@
+* {
+    font-family: "Noto Sans", "DejaVu Sans", sans-serif;
+    color: #e8ecf3;
+}
+
+QWidget#root {
+    background-color: #0b0f19;
+}
+
+QScrollArea#bodyScroll, QScrollArea#bodyScroll > QWidget, QWidget#scrollBody {
+    background: transparent;
+    border: none;
+}
+
+QLabel#headerTitle {
+    font-size: 17px;
+    font-weight: 600;
+    color: #f2f4f8;
+}
+
+QFrame[cls="card"] {
+    background-color: #131826;
+    border: 1px solid #1f2635;
+    border-radius: 12px;
+}
+
+QLabel[cls="sectionTitle"] {
+    font-size: 15px;
+    font-weight: 600;
+    color: #f2f4f8;
+}
+
+QLabel[cls="muted"] {
+    color: #8b93a7;
+    font-size: 12px;
+}
+
+QLabel#statusTitle {
+    font-size: 19px;
+    font-weight: 700;
+}
+
+QLabel#statusSubtitle {
+    color: #9aa2b4;
+    font-size: 12.5px;
+}
+
+QLabel[cls="statKey"] {
+    color: #8b93a7;
+    font-size: 12.5px;
+}
+
+QLabel[cls="statVal"] {
+    color: #eef1f6;
+    font-size: 12.5px;
+    font-weight: 600;
+}
+
+QLabel#nextRunValue {
+    color: #34d399;
+    font-weight: 700;
+    font-size: 13px;
+}
+
+QPushButton#installBtn {
+    background-color: #1f9d55;
+    color: white;
+    font-weight: 600;
+    font-size: 13.5px;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 18px;
+}
+QPushButton#installBtn:hover { background-color: #22b361; }
+QPushButton#installBtn:disabled { background-color: #14522d; color: #9fbfae; }
+
+QPushButton#retryBtn {
+    background-color: #ef4444;
+    color: white;
+    font-weight: 600;
+    font-size: 13.5px;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 18px;
+}
+QPushButton#retryBtn:hover { background-color: #f65f5f; }
+QPushButton#retryBtn:disabled { background-color: #5c2222; color: #d19c9c; }
+
+QPushButton#deleteBtn {
+    background-color: transparent;
+    color: #d3d8e2;
+    font-size: 13px;
+    border: 1px solid #2a3244;
+    border-radius: 8px;
+    padding: 8px 16px;
+}
+QPushButton#deleteBtn:hover { background-color: #1a2032; }
+QPushButton#deleteBtn:disabled { color: #5a6272; }
+
+QPushButton[cls="smallBtn"] {
+    background-color: transparent;
+    color: #d3d8e2;
+    font-size: 12.5px;
+    border: 1px solid #2a3244;
+    border-radius: 7px;
+    padding: 6px 12px;
+}
+QPushButton[cls="smallBtn"]:hover { background-color: #1a2032; }
+
+QProgressBar {
+    background-color: #1a2032;
+    border: none;
+    border-radius: 6px;
+    height: 10px;
+    text-align: center;
+    color: transparent;
+}
+QProgressBar::chunk {
+    background-color: #3b82f6;
+    border-radius: 6px;
+}
+
+QLabel#progressPct {
+    color: #cfd4e0;
+    font-size: 12.5px;
+    font-weight: 600;
+}
+
+QCheckBox[cls="toggle"] {
+    spacing: 10px;
+    font-size: 13.5px;
+}
+QCheckBox[cls="toggle"]::indicator {
+    width: 40px;
+    height: 22px;
+    border-radius: 11px;
+    background-color: #2a3244;
+}
+QCheckBox[cls="toggle"]::indicator:checked {
+    background-color: #3b82f6;
+}
+
+QComboBox {
+    background-color: #0f1420;
+    border: 1px solid #2a3244;
+    border-radius: 7px;
+    padding: 6px 10px;
+    font-size: 13px;
+}
+QComboBox:disabled { color: #5a6272; }
+QComboBox QAbstractItemView {
+    background-color: #131826;
+    color: #e8ecf3;
+    selection-background-color: #3b82f6;
+    border: 1px solid #2a3244;
+    outline: none;
+}
+
+QTextEdit#logView {
+    background-color: #0a0e17;
+    border: 1px solid #1f2635;
+    border-radius: 8px;
+    font-family: "JetBrains Mono", "DejaVu Sans Mono", monospace;
+    font-size: 12px;
+    padding: 8px;
+}
+
+QTextEdit#packagesView {
+    background-color: #0a0e17;
+    border: 1px solid #1f2635;
+    border-radius: 8px;
+    font-family: "JetBrains Mono", "DejaVu Sans Mono", monospace;
+    font-size: 12px;
+    padding: 6px 8px;
+}
+
+/* Dialogs (QMessageBox, QFileDialog frame, etc.) - applied at the
+   QApplication level so they inherit the dark theme instead of falling
+   back to the platform default (which caused unreadable white-on-white
+   text/buttons in confirmation dialogs). */
+QMessageBox, QDialog {
+    background-color: #131826;
+}
+QMessageBox QLabel {
+    color: #e8ecf3;
+    font-size: 13px;
+    background-color: transparent;
+}
+
+/* Popup menus - same reasoning as the dialogs above, for the tray
+   icon's right-click menu: without this, Qt falls back to the
+   platform's own menu rendering (often a plain white background)
+   while the app's global light text colour (the "*" rule up top)
+   still applies on top of it, making the menu text barely readable. */
+QMenu {
+    background-color: #131826;
+    border: 1px solid #1f2635;
+    border-radius: 8px;
+    padding: 4px;
+}
+QMenu::item {
+    background-color: transparent;
+    color: #e8ecf3;
+    padding: 6px 24px 6px 12px;
+    border-radius: 6px;
+}
+QMenu::item:selected {
+    background-color: #222a3d;
+    color: #f2f4f8;
+}
+QMenu::item:disabled {
+    color: #5a6272;
+}
+QMenu::separator {
+    height: 1px;
+    background-color: #1f2635;
+    margin: 4px 8px;
+}
+
+/* Generic fallback for any button that isn't one of the specific
+   objectName/[cls] buttons above (e.g. QMessageBox's own buttons). */
+QPushButton {
+    background-color: #1a2032;
+    color: #e8ecf3;
+    border: 1px solid #2a3244;
+    border-radius: 7px;
+    padding: 7px 16px;
+    font-size: 13px;
+}
+QPushButton:hover { background-color: #222a3d; }
+QPushButton:pressed { background-color: #262f45; }
+QPushButton:disabled { color: #5a6272; }
+
+QScrollBar:vertical {
+    background: transparent;
+    width: 10px;
+}
+QScrollBar::handle:vertical {
+    background: #2a3244;
+    border-radius: 5px;
+    min-height: 24px;
+}
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height: 0px; }

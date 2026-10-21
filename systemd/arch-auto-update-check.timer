@@ -1,0 +1,23 @@
+[Unit]
+Description=Arch Auto Update - continuous background check and download
+
+[Timer]
+# Runs shortly after boot, then repeats every 30 minutes for as long
+# as the system is up - this is what makes checking/downloading
+# updates "continuous" through the week, instead of only happening
+# once on the weekly schedule (that schedule now only controls the
+# WEEKLY INSTALL PROMPT - see arch-auto-update.timer and
+# arch-auto-update-install-prompt.service). check_and_download.py
+# itself is unchanged and safe to run this often: a cycle that finds
+# nothing new to fetch (the common case) finishes in a couple of
+# seconds, and common.acquire_lock() means this can never overlap
+# with an install or a manually-triggered check. To change the
+# interval, edit OnUnitActiveSec below, then:
+#   sudo systemctl daemon-reload
+#   sudo systemctl restart arch-auto-update-check.timer
+OnBootSec=3min
+OnUnitActiveSec=30min
+AccuracySec=1min
+
+[Install]
+WantedBy=timers.target

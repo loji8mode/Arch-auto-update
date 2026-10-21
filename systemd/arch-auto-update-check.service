@@ -1,0 +1,11 @@
+[Unit]
+Description=Arch Auto Update - check and download updates
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/opt/arch-auto-update/scripts/check_and_download.py
+Nice=10
+IOSchedulingClass=best-effort
+IOSchedulingPriority=7

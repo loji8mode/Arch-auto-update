@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE policyconfig PUBLIC "-//freedesktop//DTD PolicyKit Policy Configuration 1.0//EN"
+ "http://www.freedesktop.org/standards/PolicyKit/1/policyconfig.dtd">
+<!--
+  Per-script Polkit authorization for Arch Auto Update.
+
+  Every action below is tied to ONE specific, fixed script via the
+  org.freedesktop.policykit.exec.path annotation - pkexec can only
+  ever run that exact executable under that action, never anything
+  else. None of these scripts accept command-line arguments the
+  calling GUI process controls (set-timer validates its own day/hour/
+  minute arguments strictly inside the script itself; every other
+  action here takes none at all). This is deliberately NOT a blanket
+  "this app can run pacman/systemctl passwordless" rule - each action
+  authorizes exactly one fixed operation this app performs, nothing
+  broader, and none of them can be pointed at an arbitrary command.
+
+  None of these ask for a password (allow_active: yes) - this app is
+  meant to check for, download, and (only ever after the person's
+  explicit Так/Ні confirmation) install updates unattended in the
+  background, so an interactive password prompt on every run would
+  defeat that. Restricting what's actually reachable this way, rather
+  than loosening pacman/systemctl access globally, is what makes that
+  safe:
+
+    - check-download: NOT check_and_download.py directly - see
+      scripts/run_check_service.sh. A direct "pkexec
+      check_and_download.py" was found to make pacman's own database
+      sync fail every time (confirmed: the exact same script, run the
+      exact same way but under systemd instead of pkexec, works
+      reliably), so this action instead authorizes a narrow wrapper
+      that starts the systemd unit that does the real work.
+    - install: same reasoning and the same fix as check-download (see
+      scripts/run_install_service.sh) - pacman's own post-transaction
+      hooks were failing the same way ("call to waitpid failed") when
+      install_updates.py ran directly under pkexec. Only ever
+      installs what check_and_download.py already fully downloaded -
+      never triggers a new download itself - and only ever runs after
+      the person has pressed "Так": on the manual Install button, or
+      on the weekly Так/Ні prompt. Nothing on the systemd/timer side
+      ever calls this on its own.
+    - decline-install-prompt / delete-downloaded / clear-logs /
+      set-timer: never touch pacman and never install anything - only
+      this app's own pending-prompt flag, downloaded cache files, log
+      file, or timer schedule respectively.
+
+  allow_active is scoped to the active graphical session on this
+  machine's own seat - a remote or inactive session still needs to
+  authenticate normally (allow_any / allow_inactive stay at
+  auth_admin), so none of this becomes reachable over e.g. SSH without
+  a password either.
+-->
+<policyconfig>
+  <vendor>Arch Auto Update</vendor>
+  <icon_name>arch-auto-update</icon_name>
+
+  <action id="io.github.archautoupdate.check-download">
+    <description>Перевірка та завантаження оновлень Arch Linux</description>
+    <message>Введіть пароль, щоб перевірити та завантажити оновлення системи</message>
+    <icon_name>arch-auto-update</icon_name>
+    <defaults>
+      <allow_any>auth_admin</allow_any>
+      <allow_inactive>auth_admin</allow_inactive>
+      <allow_active>yes</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/opt/arch-auto-update/scripts/run_check_service.sh</annotate>
+  </action>
+
+  <action id="io.github.archautoupdate.install">
+    <description>Встановлення завантажених оновлень Arch Linux</description>
+    <message>Введіть пароль, щоб встановити завантажені оновлення</message>
+    <icon_name>arch-auto-update</icon_name>
+    <defaults>
+      <allow_any>auth_admin</allow_any>
+      <allow_inactive>auth_admin</allow_inactive>
+      <allow_active>yes</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/opt/arch-auto-update/scripts/run_install_service.sh</annotate>
+  </action>
+
+  <action id="io.github.archautoupdate.decline-install-prompt">
+    <description>Відхилення запланованого встановлення Arch Auto Update</description>
+    <message>Відкласти заплановане встановлення оновлень</message>
+    <icon_name>arch-auto-update</icon_name>
+    <defaults>
+      <allow_any>auth_admin</allow_any>
+      <allow_inactive>auth_admin</allow_inactive>
+      <allow_active>yes</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/opt/arch-auto-update/scripts/decline_install_prompt.py</annotate>
+  </action>
+
+  <action id="io.github.archautoupdate.delete-downloaded">
+    <description>Видалення завантажених файлів пакетів Arch Auto Update</description>
+    <message>Видалити вже завантажені файли пакетів оновлень</message>
+    <icon_name>arch-auto-update</icon_name>
+    <defaults>
+      <allow_any>auth_admin</allow_any>
+      <allow_inactive>auth_admin</allow_inactive>
+      <allow_active>yes</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/opt/arch-auto-update/scripts/delete_downloaded.py</annotate>
+  </action>
+
+  <action id="io.github.archautoupdate.clear-logs">
+    <description>Очищення журналу Arch Auto Update</description>
+    <message>Очистити збережений журнал подій</message>
+    <icon_name>arch-auto-update</icon_name>
+    <defaults>
+      <allow_any>auth_admin</allow_any>
+      <allow_inactive>auth_admin</allow_inactive>
+      <allow_active>yes</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/opt/arch-auto-update/scripts/clear_logs.py</annotate>
+  </action>
+
+  <action id="io.github.archautoupdate.set-timer">
+    <description>Зміна розкладу Arch Auto Update</description>
+    <message>Змінити розклад автоматичного встановлення оновлень</message>
+    <icon_name>arch-auto-update</icon_name>
+    <defaults>
+      <allow_any>auth_admin</allow_any>
+      <allow_inactive>auth_admin</allow_inactive>
+      <allow_active>yes</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/opt/arch-auto-update/scripts/set_timer.py</annotate>
+  </action>
+
+</policyconfig>

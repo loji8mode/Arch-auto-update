@@ -1,0 +1,6 @@
+[Unit]
+Description=Arch Auto Update - weekly install confirmation prompt
+
+[Service]
+Type=oneshot
+ExecStart=/opt/arch-auto-update/scripts/install_prompt.py

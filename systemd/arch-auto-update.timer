@@ -1,0 +1,18 @@
+[Unit]
+Description=Arch Auto Update - weekly install confirmation
+
+[Timer]
+# Only decides WHEN the "Install updates now?" Так/Ні prompt is
+# offered (see arch-auto-update-install-prompt.service /
+# install_prompt.py) - never installs anything by itself, and never
+# runs check_and_download.py, which now checks/downloads continuously
+# in the background all week instead (see arch-auto-update-check.timer).
+# Editable from the app itself - the GUI's Timer card and
+# scripts/set_timer.py rewrite the OnCalendar= line below directly.
+Unit=arch-auto-update-install-prompt.service
+OnCalendar=Sun *-*-* 12:00:00
+Persistent=true
+AccuracySec=1min
+
+[Install]
+WantedBy=timers.target
